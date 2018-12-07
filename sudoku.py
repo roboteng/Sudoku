@@ -24,6 +24,7 @@ class SudokuBoard():
             '''
             self.board = np.zeros((9,9))
             self.mutable = np.zeros((9,9))
+            self.possible = np.ones((9,9,9), dtype= bool)# format will be [y][x][num]
 
             for i,row in enumerate(self.board):
                 for j,char in enumerate(row):

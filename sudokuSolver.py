@@ -1,4 +1,5 @@
 from sudoku import *
+import time
 import numpy as np
 
 def solve(board): #board.board[y][x]
@@ -34,23 +35,28 @@ def solve(board): #board.board[y][x]
     print(cursor)
     print(board)
     num = 0
-    while not board.is_filled():
+    t = time.time()
+    while True:
         num += 1
         #print(cursor)
         board.board[cursor[1]][cursor[0]] += 1
         while not board.spot_check(cursor[0],cursor[1]):
             board.board[cursor[1]][cursor[0]] += 1
-        if not num % 1000:
-            print(num)
-            print(board)
+##        if not num % 1000:
+##            print(num)
+##            print(board)
         if board.board[cursor[1]][cursor[0]] > 9:
             board.board[cursor[1]][cursor[0]] = 0
             cursor = prev_pos(cursor)
         else:
-            cursor = next_pos(cursor)
-        
-        if num > 2000000:
-            break
+            try:
+                cursor = next_pos(cursor)
+            except:
+                print(num)
+                print(board)
+                dt = time.time() - t
+                print(dt)
+                break
     
     return board
 
@@ -61,3 +67,8 @@ print(sudoku)
 sudoku = solve(sudoku)
 
 print(sudoku)
+print(sudoku.is_valid())
+
+
+
+
