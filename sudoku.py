@@ -24,11 +24,14 @@ class SudokuBoard():
             '''
             self.board = np.zeros((9,9))
             self.mutable = np.zeros((9,9))
+            self.possible = np.ones((9,9,10), dtype = bool)# format will be [y][x][num]
 
             for i,row in enumerate(self.board):
                 for j,char in enumerate(row):
-                    try:
-                        self.board[i][j] = int(digits[i][j])
+                    try: #fails on a space
+                        num = int(digits[i][j])
+                        self.board[i][j] = num
+                        
                     except:
                         pass
                     if self.board[i][j] == 0:
@@ -66,6 +69,29 @@ class SudokuBoard():
             return False
         return True
     
+    def print_possible(self,digit = 0):
+        if digit != 0:
+            self.print_possible_single(digit)
+        else:
+            for digit in range(1,10):
+                self.print_possible_single(digit)
+
+    def print_possible_single(self, digit):
+        result = '\n' + str(digit) + '\n'
+        for i in range(9):
+            for j in range(9):
+                num = self.possible[i][j][digit]
+                if num:
+                    result += '*'
+                else:
+                    result += ' '
+                if j in list(range(2,7,3)):
+                    result += '|'
+            result += '\n'
+            if i in list(range(2,7,3)):
+                result += '---+---+---\n'
+        print( result )
+        
     def is_valid(self): #check position at x,y first
         for i in range(9):
             if SudokuBoard.has_double(self.board[i:i+1].flatten()):
@@ -86,6 +112,7 @@ class SudokuBoard():
                 if check == elem:
                     return True
         return False
+    
     def is_filled(self):
         for row in self.board:
             for cell in row:
@@ -116,5 +143,4 @@ if  __name__ == '__main__':
     x,y = 8,5
     sudoku.board[y][x] = 4
     print(sudoku)
-    print(sudoku.spot_check(x,y))
-    
+    sudoku.print_possible(1)
